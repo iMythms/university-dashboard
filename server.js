@@ -54,7 +54,7 @@ app.get('/', async (req, res) => {
 	res.render('index.ejs')
 })
 
-// Listening
+// Listening on port
 app.listen(PORT, () => {
 	console.log(`Running on localhost:${PORT}`)
 })
