@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/globals.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>Sign In</title>
+	</head>
+	<body class="bg-slate-100 h-dvh">
+		<%- include('../partials/_navbar.ejs') %>
+		<div class="flex items-center justify-center h-dvh">
+			<div class="bg-white w-fit p-24 rounded-3xl flex flex-col gap-5">
+				<h1 class="font-semibold text-4xl">Welcome 👋</h1>
+				<p class="text-[#313957] font-light">
+					Today is a new day. It's your day. You shape it. Sign up to start
+					managing your recipes.
+				</p>
+				<form
+					action="/auth/sign-up"
+					method="POST"
+					class="flex flex-col gap-4 w-full"
+				>
+					<div class="flex flex-col gap-2">
+						<label for="username">Username</label>
+						<input
+							type="text"
+							name="username"
+							id="username"
+							class="bg-[#F7FBFF] border border-[#D4D7E3] rounded-lg max-h-10 px-2 py-3 placeholder:font-extralight placeholder:text-sm"
+							placeholder="Please enter your username"
+						/>
+					</div>
+					<div class="flex flex-col gap-2">
+						<label for="password">Password</label>
+						<input
+							type="password"
+							name="password"
+							id="password"
+							class="bg-[#F7FBFF] border border-[#D4D7E3] rounded-lg max-h-10 px-2 py-3 placeholder:font-extralight placeholder:text-sm"
+							placeholder="Please enter your password"
+						/>
+					</div>
+					<div class="flex flex-col gap-2">
+						<label for="confirmPassword">Confirm Password</label>
+						<input
+							type="password"
+							name="confirmPassword"
+							id="confirmPassword"
+							class="bg-[#F7FBFF] border border-[#D4D7E3] rounded-lg max-h-10 px-2 py-3 placeholder:font-extralight placeholder:text-sm"
+							placeholder="Please re-enter your password"
+						/>
+					</div>
+					<div class="flex justify-end">
+						<a
+							href="/auth/sign-in"
+							class="text-sm font-light text-[#1E4AE9] hover:text-blue-900 hover:underline w-fit"
+							>Already have an account?</a
+						>
+					</div>
+					<button
+						type="submit"
+						class="bg-[#162D3A] text-lg text-white font-normal rounded-lg py-1 mt-4 hover:bg-[#1E4AE9] border border-[#162D3A]"
+					>
+						Sign up
+					</button>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
