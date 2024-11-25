@@ -1,47 +1,63 @@
-<div
-	class="bg-[#FAFAFC] dark:bg-[#1e1e1e] drop-shadow-md sticky top-0 left-0 w-full z-20"
->
+<div class="bg-[#FAFAFC] drop-shadow-md sticky top-0 left-0 w-full z-20">
 	<nav class="container mx-auto py-3">
 		<div class="flex flex-row justify-between">
-			<div class="flex gap-1">
+			<div class="flex gap-1 items-center">
 				<!-- Logo -->
-				<div>
-					<img
-						src="/Apple_logo_black 1.svg"
-						alt="Logo Light"
-						class="dark:hidden max-h-5"
-					/>
-					<img
-						src="/Apple_logo_black 2.svg"
-						alt="Logo Dark"
-						class="hidden dark:block max-h-5"
-					/>
-				</div>
+				<img src="/assets/Logo.png" alt="Logo" class="max-h-7" />
 				<!-- Title -->
-				<h1 class="font-normal text-base dark:text-white">CookBook</h1>
+				<h1 class="font-medium text-base">AnyTask</h1>
 			</div>
-			<div class="flex gap-5 items-center justify-center dark:text-white">
-				<% if (user) { %>
-				<a href="/ingredients" class="text-sm font-extralight hover:underline"
-					>All Ingredients</a
+			<% if (user) { %>
+
+			<div class="flex gap-5 items-center justify-center">
+				<a href="/" class="text-sm font-extralight hover:underline">Overview</a>
+				<a href="/courses" class="text-sm font-extralight hover:underline"
+					>Courses</a
 				>
-				<a href="/recipes" class="text-sm font-extralight hover:underline"
-					>All Recipes</a
+				<a href="/tasks" class="text-sm font-extralight hover:underline"
+					>Tasks</a
 				>
+				<a href="/instructors" class="text-sm font-extralight hover:underline"
+					>Instructors</a
+				>
+				<a
+					href="/gpa-calculator"
+					class="text-sm font-extralight hover:underline"
+					>GPA Calculator</a
+				>
+			</div>
+
+			<div class="flex gap-5 items-center justify-center">
 				<a
 					href="/auth/sign-out"
 					class="text-sm font-extralight hover:underline hover:text-red-700 dark:hover:text-red-500"
 					>Sign out</a
 				>
 				<% } else { %>
-				<a href="/auth/sign-up" class="text-sm font-extralight hover:underline"
-					>Sign up</a
-				>
-				<a href="/auth/sign-in" class="text-sm font-extralight hover:underline"
-					>Sign in</a
-				>
+				<div class="flex gap-5 items-center justify-center">
+					<a
+						href="/auth/sign-up"
+						class="text-sm font-extralight hover:underline"
+						>Sign up</a
+					>
+					<a
+						href="/auth/sign-in"
+						class="text-sm font-extralight hover:underline"
+						>Sign in</a
+					>
+				</div>
 				<% } %>
 			</div>
 		</div>
 	</nav>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			document.querySelectorAll('a.font-extralight').forEach((link) => {
+				if (link.getAttribute('href') === window.location.pathname) {
+					link.classList.remove('font-extralight')
+					link.classList.add('font-medium')
+				}
+			})
+		})
+	</script>
 </div>

@@ -43,11 +43,20 @@ app.get('/', async (req, res) => {
 
 // Require and use Controllers
 const authController = require('./controllers/auth.js')
+const courseController = require('./controllers/course.js')
+const taskController = require('./controllers/task.js')
+const instructorController = require('./controllers/instructor.js')
+const semesterController = require('./controllers/semester.js')
+
 /* Add the rest of controllers */
 
-app.use(isSignedIn)
 app.use(passUserToView)
 app.use('/auth', authController)
+app.use(isSignedIn)
+app.use('/course', courseController)
+app.use('/task', taskController)
+app.use('/instructor', instructorController)
+app.use('/semester', semesterController)
 
 // Landing Page
 app.get('/', async (req, res) => {
