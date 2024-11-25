@@ -34,3 +34,38 @@ router.post('/', async (req, res) => {
 		res.redirect('/')
 	}
 })
+
+// Show Task Page
+router.get('/:id', async (req, res) => {
+	try {
+		const task = await Task.findById(req.params.id).populate('owner')
+		res.render('tasks/show.ejs', { task })
+	} catch (err) {
+		console.log(err)
+		res.redirect('/')
+	}
+})
+
+// Update Task (Inline Editing)
+router.put('/:id', async (req, res) => {
+	try {
+		const task = await Task.findById(req.params.id)
+
+		if (!task) {
+			return res.status(404).json({ error: 'Task not found' })
+		}
+
+		// Update only the fields provided in the request body
+		Object.keys(req.body).forEach((key) => {
+			task[key] = req.body[key]
+		})
+
+		await task.save()
+		res.status(200).json({ success: true, task }) // Send updated task back as JSON
+	} catch (err) {
+		console.error(err)
+		res.status(500).json({ error: 'Failed to update task' })
+	}
+})
+
+module.exports = router
