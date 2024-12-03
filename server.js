@@ -13,7 +13,7 @@ const morgan = require('morgan')
 const isSignedIn = require('./middleware/is-signed-in')
 const passUserToView = require('./middleware/pass-user-to-view')
 
-const PORT = process.env.PORT ? process.env.PORT : '3000'
+const PORT = process.env.PORT ? process.env.PORT : '4090'
 
 mongoose.connect(process.env.MONGODB_URI)
 mongoose.connection.on('connected', () => {
@@ -53,10 +53,10 @@ const semesterController = require('./controllers/semester.js')
 app.use(passUserToView)
 app.use('/auth', authController)
 app.use(isSignedIn)
-app.use('/course', courseController)
-app.use('/task', taskController)
-app.use('/instructor', instructorController)
-app.use('/semester', semesterController)
+app.use('/courses', courseController)
+app.use('/tasks', taskController)
+app.use('/instructors', instructorController)
+app.use('/semesters', semesterController)
 
 // Landing Page
 app.get('/', async (req, res) => {

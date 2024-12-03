@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/globals.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>New Course</title>
+	</head>
+	<body class="bg-white h-dvh">
+		<%- include('../partials/_navbar.ejs') %>
+		<section class="container mx-auto">
+			<form action="/courses" method="POST" class="">
+				<div class="mt-16">
+					<input
+						type="text"
+						id="courseCode"
+						name="courseCode"
+						class="font-semibold text-3xl w-full focus:outline-none"
+						placeholder="Course Code"
+						required
+					/>
+				</div>
+				<div class="mt-12 flex gap-3">
+					<label
+						for="courseTitle"
+						class="text-base font-medium h-fit py-1 text-nowrap"
+						>Course Title</label
+					>
+					<input
+						type="text"
+						id="courseTitle"
+						name="courseTitle"
+						class="font-normal text-base w-full focus:outline-none h-fit py-1"
+						placeholder="Introduction to Statistics"
+						required
+					/>
+				</div>
+
+				<!-- First Line -->
+				<div class="mt-12 grid grid-cols-4 gap-5">
+					<!-- Status -->
+					<div class="flex gap-3 items-center">
+						<label for="status" class="text-base font-medium h-fit text-nowrap"
+							>Status</label
+						>
+
+						<div class="relative w-full">
+							<button
+								id="statusDropdownButton"
+								type="button"
+								class="w-full bg-white text-left focus:outline-none flex justify-left items-center outline-none"
+							>
+								<span
+									id="selectedStatus"
+									class="bg-[#FFE2DD] flex items-center gap-1.5 px-3 py-1 rounded-full"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="8"
+										height="8"
+										viewBox="0 0 8 8"
+										fill="none"
+									>
+										<circle cx="4" cy="4" r="4" fill="#E26F64" />
+									</svg>
+									<p class="text-sm">Not started</p>
+								</span>
+							</button>
+
+							<div
+								id="statusDropdownMenu"
+								class="hidden absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-2"
+							>
+								<ul class="text-sm">
+									<!-- Not started -->
+									<div class="px-2 py-2 hover:bg-gray-100 cursor-pointer">
+										<li
+											class="bg-[#FFE2DD] flex items-center gap-1.5 px-3 py-1 rounded-full w-fit"
+											data-value="not started"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="8"
+												height="8"
+												viewBox="0 0 8 8"
+												fill="none"
+											>
+												<circle cx="4" cy="4" r="4" fill="#E26F64" />
+											</svg>
+											<p class="text-sm">Not started</p>
+										</li>
+									</div>
+
+									<!-- In progress -->
+									<div class="px-2 py-2 hover:bg-gray-100 cursor-pointer">
+										<li
+											class="bg-[#FDECC8] flex items-center gap-1.5 px-3 py-1 rounded-full w-fit"
+											data-value="in progress"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="8"
+												height="8"
+												viewBox="0 0 8 8"
+												fill="none"
+											>
+												<circle cx="4" cy="4" r="4" fill="#CB9434" />
+											</svg>
+											<p class="text-sm">In Progress</p>
+										</li>
+									</div>
+
+									<!-- Done -->
+									<div class="px-2 py-2 hover:bg-gray-100 cursor-pointer">
+										<li
+											class="bg-[#DCEEDC] flex items-center gap-1.5 px-3 py-1 rounded-full w-fit"
+											data-value="done"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="8"
+												height="8"
+												viewBox="0 0 8 8"
+												fill="none"
+											>
+												<circle cx="4" cy="4" r="4" fill="#6C9B7D" />
+											</svg>
+											<p class="text-sm">Done</p>
+										</li>
+									</div>
+
+									<!-- Repeated -->
+									<div class="px-2 py-2 hover:bg-gray-100 cursor-pointer">
+										<li
+											class="bg-[#EEEEEE] flex items-center gap-1.5 px-3 py-1 rounded-full w-fit"
+											data-value="repeated"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="8"
+												height="8"
+												viewBox="0 0 8 8"
+												fill="none"
+											>
+												<circle cx="4" cy="4" r="4" fill="#A0A0A0" />
+											</svg>
+											<p class="text-sm">Repeated</p>
+										</li>
+									</div>
+								</ul>
+							</div>
+							<!-- Hidden input to send the selected value to the server -->
+							<input
+								type="hidden"
+								id="status"
+								name="status"
+								value="not started"
+							/>
+						</div>
+
+						<script>
+							document.addEventListener('DOMContentLoaded', () => {
+								const dropdownButton = document.getElementById(
+									'statusDropdownButton'
+								)
+								const dropdownMenu =
+									document.getElementById('statusDropdownMenu')
+								const selectedStatus = document.getElementById('selectedStatus')
+								const dropdownItems = dropdownMenu.querySelectorAll('li')
+								const hiddenInput = document.getElementById('status')
+
+								// Toggle dropdown visibility
+								dropdownButton.addEventListener('click', () => {
+									dropdownMenu.classList.toggle('hidden')
+								})
+
+								// Handle option selection
+								dropdownItems.forEach((item) => {
+									item.addEventListener('click', () => {
+										const value = item.getAttribute('data-value') // Get the value (e.g., 'not started')
+										const text = item.querySelector('p').textContent // Get the text content
+										const circleColor = item
+											.querySelector('svg circle')
+											.getAttribute('fill') // Get the circle color
+										const backgroundColor =
+											getComputedStyle(item).backgroundColor // Get the background color
+
+										// Update the content and background color of selectedStatus
+										selectedStatus.innerHTML = `
+											<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="none">
+												<circle cx="4" cy="4" r="4" fill="${circleColor}"></circle>
+											</svg>
+											<p class="text-sm">${text}</p>
+										`
+										selectedStatus.style.backgroundColor = backgroundColor // Dynamically update the background color
+
+										// Update the hidden input value
+										hiddenInput.value = value
+
+										// Close the dropdown menu
+										dropdownMenu.classList.add('hidden')
+									})
+								})
+
+								// Close dropdown when clicking outside
+								document.addEventListener('click', (event) => {
+									if (
+										!dropdownButton.contains(event.target) &&
+										!dropdownMenu.contains(event.target)
+									) {
+										dropdownMenu.classList.add('hidden')
+									}
+								})
+							})
+						</script>
+					</div>
+
+					<!-- Credits -->
+					<div class="flex gap-3">
+						<label
+							for="credits"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Credits</label
+						>
+						<input
+							type="text"
+							id="credits"
+							name="credits"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							placeholder="3"
+							required
+						/>
+					</div>
+
+					<!-- Degree -->
+					<div class="flex gap-3">
+						<label
+							for="degree"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Degree</label
+						>
+					</div>
+
+					<!-- Instructor -->
+					<div class="flex gap-3">
+						<label
+							for="instructor"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Instructor</label
+						>
+					</div>
+				</div>
+
+				<!-- Second Line -->
+				<div class="mt-12 grid grid-cols-4 gap-5">
+					<!-- Semester -->
+					<div class="flex gap-3">
+						<label
+							for="semester"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Semester</label
+						>
+					</div>
+
+					<!-- Timing -->
+					<div class="flex gap-3">
+						<label
+							for="timing"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Timing</label
+						>
+					</div>
+
+					<!-- Grade% -->
+					<div class="flex gap-3">
+						<label
+							for="gradePersentage"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Grade%</label
+						>
+					</div>
+
+					<!-- Grade -->
+					<div class="flex gap-3">
+						<label
+							for="grade"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Grade</label
+						>
+					</div>
+				</div>
+			</form>
+		</section>
+	</body>
+</html>
