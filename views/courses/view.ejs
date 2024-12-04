@@ -138,6 +138,66 @@
 					</p>
 				</div>
 			</div>
+
+			<!-- Task Table -->
+			<div class="mt-16">
+				<h2 class="text-2xl font-semibold mb-6">Tasks</h2>
+				<table
+					class="table-auto w-full mb-4 border-collapse border border-gray-800 rounded-xl overflow-hidden"
+				>
+					<thead class="bg-gray-100">
+						<tr>
+							<th class="px-4 py-2 text-left">Task Name</th>
+							<th class="px-4 py-2 text-left">Due Date</th>
+							<th class="px-4 py-2 text-left">Status</th>
+							<th class="px-4 py-2 text-left">Score</th>
+							<th class="px-4 py-2 text-left">Weight</th>
+							<th class="px-4 py-2 text-left">Final Grade</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% tasks.forEach((task) => { %>
+						<tr
+							class="border border-gray-300 cursor-pointer hover:bg-gray-50"
+							onclick="window.location.href='/tasks/<%= task._id %>'"
+						>
+							<td class="px-4 py-2"><%= task.name %></td>
+							<td class="px-4 py-2">
+								<%= task.dueDate ? task.dueDate.toISOString().slice(0, 10) :
+								'N/A' %>
+							</td>
+							<td class="px-4 py-2">
+								<div
+									class="flex items-center gap-1.5 px-3 py-1 rounded-full w-fit <%= task.status === 'done' ? 'bg-[#DCEEDC]' : task.status === 'in progress' ? 'bg-[#FDECC8]' : 'bg-[#FFE2DD]' %>"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="8"
+										height="8"
+										viewBox="0 0 8 8"
+										fill="none"
+									>
+										<circle
+											cx="4"
+											cy="4"
+											r="4"
+											fill="<%= task.status === 'done' ? '#6C9B7D' : task.status === 'in progress' ? '#CB9434' : '#E26F64' %>"
+										/>
+									</svg>
+									<p class="text-sm">
+										<%= task.status.charAt(0).toUpperCase() +
+										task.status.slice(1) %>
+									</p>
+								</div>
+							</td>
+							<td class="px-4 py-2"><%= task.score || 0 %></td>
+							<td class="px-4 py-2"><%= task.weight || 0 %></td>
+							<td class="px-4 py-2"><%= task.finalGrade || 0 %></td>
+						</tr>
+						<% }) %>
+					</tbody>
+				</table>
+			</div>
 		</section>
 	</body>
 </html>

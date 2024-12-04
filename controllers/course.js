@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Course = require('../models/course')
 const Instructor = require('../models/instructor')
+const Task = require('../models/task')
 const Semester = require('../models/semester')
 
 router.get('/', async (req, res) => {
@@ -62,11 +63,16 @@ router.post('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
 	try {
-		const course = await Course.findById(req.params.id).populate(
-			'instructor',
-			'name'
-		)
-		res.render('courses/view', { course })
+		// Find the course and populate the instructor field
+		const course = await Course.findById(req.params.id)
+			.populate('instructor', 'name')
+			.populate('semester', 'name') // Ensure semester is also populated if needed
+
+		// Find tasks associated with this course
+		const tasks = await Task.find({ course: course._id })
+
+		// Render the view page and pass both the course and tasks
+		res.render('courses/view', { course, tasks })
 	} catch (err) {
 		console.error(err)
 		res.redirect('/courses')
