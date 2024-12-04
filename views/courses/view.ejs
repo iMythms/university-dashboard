@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/globals.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>View Course</title>
+	</head>
+	<body class="bg-white h-dvh">
+		<%- include('../partials/_navbar.ejs') %>
+		<section class="container mx-auto">
+			<div class="flex justify-between items-center mt-16">
+				<!-- Course Code -->
+				<div>
+					<h1 class="font-semibold text-3xl"><%= course.courseCode %></h1>
+				</div>
+				<a
+					href="/courses/<%= course._id %>/edit"
+					class="w-fit text-base font-medium bg-[#F1F1F0] px-2.5 py-1 rounded-lg hover:bg-[#bababa] transition ease-in-out"
+				>
+					Edit
+				</a>
+			</div>
+
+			<!-- Course Title -->
+			<div class="mt-12 flex gap-3">
+				<label class="text-base font-medium h-fit py-1 text-nowrap"
+					>Course Title</label
+				>
+				<p class="font-normal text-base w-full h-fit py-1">
+					<%= course.courseTitle %>
+				</p>
+			</div>
+
+			<!-- First Line -->
+			<div class="mt-12 grid grid-cols-5 gap-5">
+				<!-- Status -->
+				<div class="flex gap-3 items-center">
+					<label class="text-base font-medium h-fit text-nowrap">Status</label>
+					<p class="text-sm font-normal bg-[#ececec] p-1 rounded-lg">
+						<%= course.status %>
+					</p>
+				</div>
+
+				<!-- Credits -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Credits</label
+					>
+					<p class="font-normal text-base w-full h-fit py-1">
+						<%= course.credits %>
+					</p>
+				</div>
+
+				<!-- Location -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Location</label
+					>
+					<p class="font-normal text-base w-full h-fit py-1">
+						<%= course.location %>
+					</p>
+				</div>
+
+				<!-- Semester -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Semester</label
+					>
+					<p class="font-normal text-base w-full h-fit py-1">
+						<%= course.semester.name %>
+					</p>
+				</div>
+
+				<!-- Instructor -->
+				<div class="flex gap-3 max-h-9">
+					<label class="text-base font-medium h-fit text-nowrap"
+						>Instructors</label
+					>
+					<ul class="font-normal text-base w-full">
+						<% course.instructor.forEach((instructor) => { %>
+						<li><%= instructor.name %></li>
+						<% }); %>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Second Line -->
+			<div class="mt-12 grid grid-cols-5 gap-8">
+				<!-- Days -->
+				<div class="flex gap-3 max-h-9">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Days</label
+					>
+					<p class="font-normal text-base w-full h-fit py-1">
+						<%= course.day.join(', ') %>
+					</p>
+				</div>
+
+				<!-- Timing -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Timing</label
+					>
+					<p class="font-normal text-base w-full h-fit py-1">
+						<%= course.timing.startTime %> to <%= course.timing.endTime %>
+					</p>
+				</div>
+
+				<!-- Grade% -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Grade%</label
+					>
+					<p class="font-normal text-base w-full h-fit py-1">
+						<%= course.gradePercentage || 0 %>
+					</p>
+				</div>
+
+				<!-- Grade -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Grade</label
+					>
+					<p class="font-normal text-base w-full h-fit py-1">
+						<%= course.grade || 0 %>
+					</p>
+				</div>
+
+				<!-- Degree -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Degree</label
+					>
+					<p class="font-normal text-base w-full h-fit py-1">
+						<%= course.degree || 0 %>
+					</p>
+				</div>
+			</div>
+		</section>
+	</body>
+</html>

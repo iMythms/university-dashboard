@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/globals.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>Instructors</title>
+	</head>
+	<body class="bg-white h-dvh">
+		<%- include('../partials/_navbar.ejs') %>
+		<section class="container mx-auto">
+			<div class="flex justify-between items-center">
+				<h1 class="my-16 font-semibold text-3xl">All Instructors</h1>
+				<a
+					href="/instructors/new"
+					class="w-fit text-base font-medium bg-[#F1F1F0] px-2.5 py-1 rounded-lg hover:bg-[#bababa] transition ease-in-out"
+					>Add Instructor</a
+				>
+			</div>
+			<div class="grid grid-cols-6 gap-5 mt-20">
+				<% instructors.forEach((instructor) => { %>
+				<a
+					href="/instructors/<%= instructor._id %>"
+					class="bg-white border border-[#E5E7EB] rounded-xl p-4 flex flex-col gap-[10px] cursor-pointer hover:bg-[#f7f7f7] transition ease-in-out"
+				>
+					<div class="flex gap-2">
+						<p>👨🏻‍🏫</p>
+						<h6 class="font-medium text-base"><%= instructor.name %></h6>
+					</div>
+					<p
+						class="cursor-pointer w-fit text-sm font-normal hover:bg-[#ececec] px-1.5 py-0.5 rounded-lg transition ease-in-out"
+					>
+						<%= instructor.contactInfo %>
+					</p>
+				</a>
+				<% }) %>
+			</div>
+		</section>
+	</body>
+</html>

@@ -5,7 +5,7 @@ const Semester = require('../models/semester')
 // List All Semesters
 router.get('/', async (req, res) => {
 	try {
-		const semesters = await Course.find().populate('owner')
+		const semesters = await Semester.find().populate('user')
 		res.render('semesters/index.ejs', { semesters })
 	} catch (err) {
 		console.error(err)
@@ -21,7 +21,7 @@ router.get('/new', (req, res) => {
 // Create a New Semester
 router.post('/', async (req, res) => {
 	try {
-		req.body.owner = req.session.user._id
+		req.body.user = req.session.user._id
 		await Semester.create(req.body)
 
 		if (req.body.action === 'addAndView') {
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
 // Show Semester Page
 router.get('/:id', async (req, res) => {
 	try {
-		const semester = await Semester.findById(req.params.id).populate('owner')
+		const semester = await Semester.findById(req.params.id).populate('user')
 		res.render('semesters/show.ejs', { semester })
 	} catch (err) {
 		console.error(err)

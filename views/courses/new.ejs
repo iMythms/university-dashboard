@@ -11,16 +11,27 @@
 		<%- include('../partials/_navbar.ejs') %>
 		<section class="container mx-auto">
 			<form action="/courses" method="POST" class="">
-				<div class="mt-16">
-					<input
-						type="text"
-						id="courseCode"
-						name="courseCode"
-						class="font-semibold text-3xl w-full focus:outline-none"
-						placeholder="Course Code"
-						required
-					/>
+				<div class="flex justify-between items-center mt-16">
+					<!-- Course Code -->
+					<div>
+						<input
+							type="text"
+							id="courseCode"
+							name="courseCode"
+							class="font-semibold text-3xl w-full focus:outline-none"
+							placeholder="Course Code"
+							required
+						/>
+					</div>
+					<button
+						type="submit"
+						class="w-fit text-base font-medium bg-[#F1F1F0] px-2.5 py-1 rounded-lg hover:bg-[#2a2a2a] hover:text-white transition ease-in-out"
+					>
+						Done
+					</button>
 				</div>
+
+				<!-- Course Title -->
 				<div class="mt-12 flex gap-3">
 					<label
 						for="courseTitle"
@@ -38,7 +49,7 @@
 				</div>
 
 				<!-- First Line -->
-				<div class="mt-12 grid grid-cols-4 gap-5">
+				<div class="mt-12 grid grid-cols-5 gap-5">
 					<!-- Status -->
 					<div class="flex gap-3 items-center">
 						<label for="status" class="text-base font-medium h-fit text-nowrap"
@@ -233,27 +244,22 @@
 						/>
 					</div>
 
-					<!-- Degree -->
+					<!-- Location -->
 					<div class="flex gap-3">
 						<label
-							for="degree"
+							for="location"
 							class="text-base font-medium h-fit py-1 text-nowrap"
-							>Degree</label
+							>Location</label
 						>
+						<input
+							type="text"
+							id="location"
+							name="location"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							placeholder="LH (09)"
+						/>
 					</div>
 
-					<!-- Instructor -->
-					<div class="flex gap-3">
-						<label
-							for="instructor"
-							class="text-base font-medium h-fit py-1 text-nowrap"
-							>Instructor</label
-						>
-					</div>
-				</div>
-
-				<!-- Second Line -->
-				<div class="mt-12 grid grid-cols-4 gap-5">
 					<!-- Semester -->
 					<div class="flex gap-3">
 						<label
@@ -261,6 +267,62 @@
 							class="text-base font-medium h-fit py-1 text-nowrap"
 							>Semester</label
 						>
+						<select
+							id="semester"
+							name="semester"
+							class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none"
+						>
+							<% semesters.forEach((semester) => { %>
+							<option value="<%= semester._id %>"><%= semester.name %></option>
+							<% }); %>
+						</select>
+					</div>
+
+					<!-- Instructor -->
+					<div class="flex gap-3 max-h-9">
+						<label
+							for="instructor"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Instructors</label
+						>
+						<select
+							id="instructor"
+							name="instructor"
+							class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none"
+							multiple
+						>
+							<% instructors.forEach((instructor) => { %>
+							<option value="<%= instructor._id %>">
+								<%= instructor.name %>
+							</option>
+							<% }); %>
+						</select>
+					</div>
+				</div>
+
+				<!-- Second Line -->
+				<div class="mt-12 grid grid-cols-5 gap-8">
+					<!-- Days -->
+					<div class="flex gap-3 max-h-9">
+						<label
+							for="days"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Days</label
+						>
+						<select
+							id="days"
+							name="day[]"
+							class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none"
+							multiple
+							required
+						>
+							<option value="saturday">Saturday</option>
+							<option value="sunday">Sunday</option>
+							<option value="monday">Monday</option>
+							<option value="tuesday">Tuesday</option>
+							<option value="wednesday">Wednesday</option>
+							<option value="thursday">Thursday</option>
+						</select>
 					</div>
 
 					<!-- Timing -->
@@ -270,15 +332,40 @@
 							class="text-base font-medium h-fit py-1 text-nowrap"
 							>Timing</label
 						>
+						<div class="flex gap-3 items-center w-full">
+							<input
+								type="time"
+								id="startTime"
+								name="timing[startTime]"
+								class="font-normal text-base w-1/2 focus:outline-none h-fit py-1"
+								required
+							/>
+							<span>to</span>
+							<input
+								type="time"
+								id="endTime"
+								name="timing[endTime]"
+								class="font-normal text-base w-1/2 focus:outline-none h-fit py-1"
+								required
+							/>
+						</div>
 					</div>
 
 					<!-- Grade% -->
 					<div class="flex gap-3">
 						<label
-							for="gradePersentage"
+							for="gradePercentage"
 							class="text-base font-medium h-fit py-1 text-nowrap"
 							>Grade%</label
 						>
+						<input
+							type="number"
+							id="gradePercentage"
+							name="gradePercentage"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							value="0"
+							readonly
+						/>
 					</div>
 
 					<!-- Grade -->
@@ -288,6 +375,31 @@
 							class="text-base font-medium h-fit py-1 text-nowrap"
 							>Grade</label
 						>
+						<input
+							type="number"
+							id="grade"
+							name="grade"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							value="0"
+							readonly
+						/>
+					</div>
+
+					<!-- Degree -->
+					<div class="flex gap-3">
+						<label
+							for="degree"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Degree</label
+						>
+						<input
+							type="number"
+							id="degree"
+							name="degree"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							value="0"
+							readonly
+						/>
 					</div>
 				</div>
 			</form>

@@ -20,24 +20,48 @@
 			</div>
 			<div class="grid grid-cols-6 gap-5 mt-20">
 				<% courses.forEach((course) => { %>
-				<a
-					href="/courses/<%= course._id %>"
+				<!-- Course Card -->
+				<div
 					class="bg-white border border-[#E5E7EB] rounded-xl p-4 flex flex-col gap-[10px] cursor-pointer hover:bg-[#f7f7f7] transition ease-in-out"
 				>
-					<h6 class="font-normal text-base"><%= course.courseCode %></h6>
-					<p
+					<!-- Course Code as a Link -->
+					<a
+						href="/courses/<%= course._id %>"
+						class="font-normal text-base text-black hover:underline"
+					>
+						<%= course.courseCode %>
+					</a>
+
+					<!-- Course Status -->
+					<div
 						class="cursor-pointer w-fit text-sm font-normal bg-[#ececec] p-1 rounded-lg hover:bg-[#bababa] transition ease-in-out"
 					>
-						<%= course.duration %>
-					</p>
-					<a
-						href="/"
-						class="flex gap-1 items-center w-fit hover:bg-[#ececec] px-1.5 py-0.5 rounded-lg transition ease-in-out"
-					>
-						<p>👨🏻‍🏫</p>
-						<p class="text-sm"><%= course.instructor %></p>
-					</a>
-				</a>
+						<% if (course.status === 'done') { %>
+						<span class="text-green-700">● Done</span>
+						<% } else if (course.status === 'in progress') { %>
+						<span class="text-yellow-700">● In Progress</span>
+						<% } else if (course.status === 'not started') { %>
+						<span class="text-gray-700">● Not Started</span>
+						<% } else if (course.status === 'repeated') { %>
+						<span class="text-red-700">● Repeated</span>
+						<% } %>
+					</div>
+
+					<!-- Course Title -->
+					<p class="text-sm"><%= course.courseTitle %></p>
+
+					<!-- Instructors -->
+					<div class="">
+						<% course.instructor.forEach((instructor) => { %>
+						<div
+							class="flex gap-1 items-center w-fit hover:bg-[#ececec] px-1.5 py-0.5 rounded-lg transition ease-in-out"
+						>
+							<p>👨🏻‍🏫</p>
+							<p class="text-sm"><%= instructor.name %></p>
+						</div>
+						<% }) %>
+					</div>
+				</div>
 				<% }) %>
 			</div>
 		</section>

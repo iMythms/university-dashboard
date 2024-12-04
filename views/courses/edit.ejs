@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/globals.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>Edit Course</title>
+	</head>
+	<body class="bg-white h-dvh">
+		<%- include('../partials/_navbar.ejs') %>
+		<section class="container mx-auto">
+			<form action="/courses/<%= course._id %>?_method=PUT" method="POST" class="">
+				<div class="flex justify-between items-center mt-16">
+					<!-- Course Code -->
+					<div>
+						<input
+							type="text"
+							id="courseCode"
+							name="courseCode"
+							class="font-semibold text-3xl w-full focus:outline-none"
+							value="<%= course.courseCode %>"
+							required
+						/>
+					</div>
+					<button
+						type="submit"
+						class="w-fit text-base font-medium bg-[#F1F1F0] px-2.5 py-1 rounded-lg hover:bg-[#2a2a2a] hover:text-white transition ease-in-out"
+					>
+						Done
+					</button>
+				</div>
+
+				<!-- Course Title -->
+				<div class="mt-12 flex gap-3">
+					<label for="courseTitle" class="text-base font-medium h-fit py-1 text-nowrap"
+						>Course Title</label
+					>
+					<input
+						type="text"
+						id="courseTitle"
+						name="courseTitle"
+						class="font-normal text-base w-full focus:outline-none h-fit py-1"
+						value="<%= course.courseTitle %>"
+						required
+					/>
+				</div>
+
+				<!-- First Line -->
+				<div class="mt-12 grid grid-cols-5 gap-5">
+					<!-- Status -->
+					<div class="flex gap-3 items-center">
+						<label for="status" class="text-base font-medium h-fit text-nowrap"
+							>Status</label
+						>
+						<select
+							id="status"
+							name="status"
+							class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none"
+						>
+							<option value="not started" <%= course.status === 'not started' ? 'selected' : '' %>>
+								Not Started
+							</option>
+							<option value="in progress" <%= course.status === 'in progress' ? 'selected' : '' %>>
+								In Progress
+							</option>
+							<option value="done" <%= course.status === 'done' ? 'selected' : '' %>>
+								Done
+							</option>
+							<option value="repeated" <%= course.status === 'repeated' ? 'selected' : '' %>>
+								Repeated
+							</option>
+						</select>
+					</div>
+
+					<!-- Credits -->
+					<div class="flex gap-3">
+						<label for="credits" class="text-base font-medium h-fit py-1 text-nowrap"
+							>Credits</label
+						>
+						<input
+							type="number"
+							id="credits"
+							name="credits"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							value="<%= course.credits %>"
+							required
+						/>
+					</div>
+
+					<!-- Location -->
+					<div class="flex gap-3">
+						<label for="location" class="text-base font-medium h-fit py-1 text-nowrap"
+							>Location</label
+						>
+						<input
+							type="text"
+							id="location"
+							name="location"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							value="<%= course.location %>"
+						/>
+					</div>
+
+					<!-- Semester -->
+					<div class="flex gap-3">
+						<label for="semester" class="text-base font-medium h-fit py-1 text-nowrap"
+							>Semester</label
+						>
+						<select
+							id="semester"
+							name="semester"
+							class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none"
+						>
+							<% semesters.forEach((semester) => { %>
+							<option value="<%= semester._id %>" <%= semester._id.equals(course.semester) ? 'selected' : '' %>>
+								<%= semester.name %>
+							</option>
+							<% }); %>
+						</select>
+					</div>
+
+					<!-- Instructor -->
+					<div class="flex gap-3 max-h-9">
+						<label for="instructor" class="text-base font-medium h-fit py-1 text-nowrap"
+							>Instructors</label
+						>
+						<select
+							id="instructor"
+							name="instructor"
+							class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none"
+							multiple
+						>
+							<% instructors.forEach((instructor) => { %>
+							<option value="<%= instructor._id %>" <%= course.instructor.some((inst) => inst.equals(instructor._id)) ? 'selected' : '' %>>
+								<%= instructor.name %>
+							</option>
+							<% }); %>
+						</select>
+					</div>
+				</div>
+
+				<!-- Second Line -->
+				<div class="mt-12 grid grid-cols-5 gap-8">
+					<!-- Days -->
+					<div class="flex gap-3 max-h-9">
+						<label for="days" class="text-base font-medium h-fit py-1 text-nowrap"
+							>Days</label
+						>
+						<select
+							id="days"
+							name="day[]"
+							class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none"
+							multiple
+							required
+						>
+							<option value="saturday" <%= course.day.includes('saturday') ? 'selected' : '' %>>
+								Saturday
+							</option>
+							<option value="sunday" <%= course.day.includes('sunday') ? 'selected' : '' %>>
+								Sunday
+							</option>
+							<option value="monday" <%= course.day.includes('monday') ? 'selected' : '' %>>
+								Monday
+							</option>
+							<option value="tuesday" <%= course.day.includes('tuesday') ? 'selected' : '' %>>
+								Tuesday
+							</option>
+							<option value="wednesday" <%= course.day.includes('wednesday') ? 'selected' : '' %>>
+								Wednesday
+							</option>
+							<option value="thursday" <%= course.day.includes('thursday') ? 'selected' : '' %>>
+								Thursday
+							</option>
+						</select>
+					</div>
+
+					<!-- Timing -->
+					<div class="flex gap-3">
+						<label for="timing" class="text-base font-medium h-fit py-1 text-nowrap"
+							>Timing</label
+						>
+						<div class="flex gap-3 items-center w-full">
+							<input
+								type="time"
+								id="startTime"
+								name="timing[startTime]"
+								class="font-normal text-base w-1/2 focus:outline-none h-fit py-1"
+								value="<%= course.timing.startTime %>"
+								required
+							/>
+							<span>to</span>
+							<input
+								type="time"
+								id="endTime"
+								name="timing[endTime]"
+								class="font-normal text-base w-1/2 focus:outline-none h-fit py-1"
+								value="<%= course.timing.endTime %>"
+								required
+							/>
+						</div>
+					</div>
+
+					<!-- Grade%, Grade, Degree -->
+					<div class="flex gap-3">
+						<!-- You can use similar logic to populate other fields -->
+					</div>
+				</div>
+			</form>
+		</section>
+	</body>
+</html>

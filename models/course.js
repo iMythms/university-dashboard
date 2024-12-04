@@ -17,7 +17,7 @@ const courseSchema = new mongoose.Schema(
 			require: true,
 		},
 		day: {
-			type: String,
+			type: [String], // Accepts an array of strings
 			enum: [
 				'saturday',
 				'sunday',
@@ -26,11 +26,17 @@ const courseSchema = new mongoose.Schema(
 				'wednesday',
 				'thursday',
 			],
-			require: true,
+			required: true,
 		},
-		duration: {
-			type: String,
-			require: true,
+		timing: {
+			startTime: {
+				type: String,
+				required: true, // Example format: '10:00'
+			},
+			endTime: {
+				type: String,
+				required: true, // Example format: '10:50'
+			},
 		},
 		location: {
 			type: String,

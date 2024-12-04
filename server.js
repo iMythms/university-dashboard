@@ -9,6 +9,7 @@ const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')
 const methodOverride = require('method-override')
 const morgan = require('morgan')
+const path = require('path')
 
 const isSignedIn = require('./middleware/is-signed-in')
 const passUserToView = require('./middleware/pass-user-to-view')
@@ -21,7 +22,7 @@ mongoose.connection.on('connected', () => {
 })
 
 app.use(express.static('public'))
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.use(morgan('dev'))
 app.use(
@@ -40,6 +41,10 @@ app.get('/', async (req, res) => {
 		user: req.session.user,
 	})
 })
+
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'views'))
+app.use(express.json())
 
 // Require and use Controllers
 const authController = require('./controllers/auth.js')

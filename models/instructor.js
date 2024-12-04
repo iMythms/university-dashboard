@@ -4,23 +4,23 @@ const instructorSchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
-			require: true,
+			required: true,
 		},
 		contactInfo: {
 			type: String,
-			require: false,
+			required: false,
 		},
 		course: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: 'Course',
-				require: false,
+				required: false,
 			},
 		],
 		user: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',
-			require: true,
+			required: true,
 		},
 	},
 	{

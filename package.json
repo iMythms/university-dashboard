@@ -9,7 +9,8 @@
 		"express-session": "^1.18.1",
 		"method-override": "^3.0.0",
 		"mongoose": "^8.8.2",
-		"morgan": "^1.10.0"
+		"morgan": "^1.10.0",
+		"path": "^0.12.7"
 	},
 	"name": "university-dashboard",
 	"version": "1.0.0",

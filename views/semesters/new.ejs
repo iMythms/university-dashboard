@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/globals.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>New Instructor</title>
+	</head>
+	<body class="bg-white h-dvh">
+		<%- include('../partials/_navbar.ejs') %>
+		<section class="container mx-auto">
+			<form action="/semesters" method="POST" class="">
+				<input type="hidden" name="action" value="addAndView" />
+				<div class="flex justify-between items-center mt-16">
+					<!-- Semester Name -->
+					<div>
+						<input
+							type="text"
+							id="name"
+							name="name"
+							class="font-semibold text-3xl w-full focus:outline-none"
+							placeholder="Semester"
+							required
+						/>
+					</div>
+					<div class="flex justify-between gap-2">
+						<button
+							type="submit"
+							class="w-fit text-base font-medium bg-[#2a2a2a] px-2.5 py-1 rounded-lg hover:bg-[#F1F1F0] text-white hover:text-black transition ease-in-out"
+						>
+							Done
+						</button>
+					</div>
+				</div>
+			</form>
+		</section>
+	</body>
+</html>

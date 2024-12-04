@@ -5,7 +5,7 @@ const Task = require('../models/task')
 // List All Tasks
 router.get('/', async (req, res) => {
 	try {
-		const tasks = await Task.find().populate('owner')
+		const tasks = await Task.find().populate('user')
 		res.render('tasks/index.ejs', { tasks })
 	} catch (err) {
 		console.error(err)
@@ -21,7 +21,7 @@ router.get('/new', (req, res) => {
 // Create a new task
 router.post('/', async (req, res) => {
 	try {
-		req.body.owner = req.session.user._id
+		req.body.user = req.session.user._id
 		await Task.create(req.body)
 
 		if (req.body.action === 'addAndView') {
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
 // Show Task Page
 router.get('/:id', async (req, res) => {
 	try {
-		const task = await Task.findById(req.params.id).populate('owner')
+		const task = await Task.findById(req.params.id).populate('user')
 		res.render('tasks/show.ejs', { task })
 	} catch (err) {
 		console.log(err)
