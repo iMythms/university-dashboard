@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/globals.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>View Task</title>
+	</head>
+	<body class="bg-white h-dvh">
+		<%- include('../partials/_navbar.ejs') %>
+		<section class="container mx-auto">
+			<div class="flex justify-between items-center mt-16">
+				<!-- Task Name -->
+				<div>
+					<h1 class="font-semibold text-3xl"><%= task.name %></h1>
+				</div>
+				<a
+					href="/tasks/<%= task._id %>/edit"
+					class="w-fit text-base font-medium bg-[#F1F1F0] px-2.5 py-1 rounded-lg hover:bg-[#2a2a2a] hover:text-white transition ease-in-out"
+				>
+					Edit
+				</a>
+			</div>
+
+			<!-- Due Date -->
+			<div class="mt-12 flex gap-3">
+				<label class="text-base font-medium h-fit py-1 text-nowrap"
+					>Due Date:</label
+				>
+				<p class="font-normal text-base h-fit py-1">
+					<%= task.dueDate ? task.dueDate.toISOString().slice(0, 10) : 'N/A' %>
+				</p>
+			</div>
+
+			<!-- First Line -->
+			<div class="mt-12 grid grid-cols-5 gap-5">
+				<!-- Status -->
+				<div class="flex gap-3 items-center">
+					<label class="text-base font-medium h-fit text-nowrap">Status:</label>
+					<span
+						class="<%= task.status === 'done' ? 'bg-green-200 text-green-700' : task.status === 'in progress' ? 'bg-yellow-200 text-yellow-700' : 'bg-red-200 text-red-700' %> px-2 py-1 rounded-lg"
+					>
+						<%= task.status %>
+					</span>
+				</div>
+
+				<!-- Score -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Score:</label
+					>
+					<p class="font-normal text-base h-fit py-1"><%= task.score %></p>
+				</div>
+
+				<!-- Weight -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Weight:</label
+					>
+					<p class="font-normal text-base h-fit py-1"><%= task.weight %></p>
+				</div>
+
+				<!-- Final Grade -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Final Grade:</label
+					>
+					<p class="font-normal text-base h-fit py-1"><%= task.finalGrade %></p>
+				</div>
+
+				<!-- Course -->
+				<div class="flex gap-3">
+					<label class="text-base font-medium h-fit py-1 text-nowrap"
+						>Course:</label
+					>
+					<p class="font-normal text-base h-fit py-1">
+						<%= task.course.courseCode %>: <%= task.course.courseTitle %>
+					</p>
+				</div>
+			</div>
+		</section>
+	</body>
+</html>

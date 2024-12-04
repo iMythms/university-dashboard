@@ -1,70 +1,122 @@
 const express = require('express')
 const router = express.Router()
 const Task = require('../models/task')
+const Course = require('../models/course')
 
-// List All Tasks
 router.get('/', async (req, res) => {
 	try {
-		const tasks = await Task.find().populate('user')
-		res.render('tasks/index.ejs', { tasks })
+		const tasks = await Task.find()
+			.populate({
+				path: 'course',
+				select: 'courseCode courseTitle semester',
+				populate: {
+					path: 'semester',
+					select: 'name',
+				},
+			})
+			.exec()
+
+		const groupedTasks = {}
+		tasks.forEach((task) => {
+			const semesterName = task.course.semester.name
+			const courseName = `${task.course.courseCode}: ${task.course.courseTitle}`
+
+			if (!groupedTasks[semesterName]) {
+				groupedTasks[semesterName] = {}
+			}
+
+			if (!groupedTasks[semesterName][courseName]) {
+				groupedTasks[semesterName][courseName] = []
+			}
+
+			groupedTasks[semesterName][courseName].push(task)
+		})
+
+		res.render('tasks/index', { groupedTasks })
 	} catch (err) {
 		console.error(err)
 		res.redirect('/')
 	}
 })
 
-// New Task Page
-router.get('/new', (req, res) => {
-	res.render('tasks/new.ejs')
+router.get('/new', async (req, res) => {
+	try {
+		const courses = await Course.find().select('courseCode _id')
+		res.render('tasks/new', { courses })
+	} catch (err) {
+		console.error(err)
+		res.redirect('/tasks')
+	}
 })
 
-// Create a new task
 router.post('/', async (req, res) => {
 	try {
 		req.body.user = req.session.user._id
 		await Task.create(req.body)
-
-		if (req.body.action === 'addAndView') {
-			res.redirect('/tasks')
-		} else if (req.body.action === 'addAndNew') {
-			res.redirect('/tasks/new')
-		}
+		res.redirect('/tasks')
 	} catch (err) {
 		console.error(err)
 		res.redirect('/')
 	}
 })
 
-// Show Task Page
 router.get('/:id', async (req, res) => {
 	try {
 		const task = await Task.findById(req.params.id).populate('user')
-		res.render('tasks/show.ejs', { task })
+		res.render('tasks/view.ejs', { task })
 	} catch (err) {
 		console.log(err)
 		res.redirect('/')
 	}
 })
 
-// Update Task (Inline Editing)
-router.put('/:id', async (req, res) => {
+router.get('/:id/edit', async (req, res) => {
 	try {
-		const task = await Task.findById(req.params.id)
-
+		const task = await Task.findById(req.params.id).populate(
+			'course',
+			'courseCode'
+		)
 		if (!task) {
-			return res.status(404).json({ error: 'Task not found' })
+			throw new Error('Task not found.')
 		}
+		const courses = await Course.find().select('courseCode _id')
 
-		// Update only the fields provided in the request body
-		Object.keys(req.body).forEach((key) => {
-			task[key] = req.body[key]
-		})
-
-		await task.save()
-		res.status(200).json({ success: true, task }) // Send updated task back as JSON
+		res.render('tasks/edit', { task, courses })
 	} catch (err) {
 		console.error(err)
-		res.status(500).json({ error: 'Failed to update task' })
+		res.redirect('/tasks')
+	}
+})
+
+router.put('/:id', async (req, res) => {
+	try {
+		if (!req.body.name || !req.body.dueDate) {
+			throw new Error('Name and Due Date are required.')
+		}
+
+		const updatedData = {
+			name: req.body.name,
+			dueDate: req.body.dueDate,
+			status: req.body.status,
+			score: req.body.score,
+			weight: req.body.weight,
+			finalGrade: req.body.finalGrade,
+			course: req.body.course,
+		}
+
+		const updatedTask = await Task.findByIdAndUpdate(
+			req.params.id,
+			updatedData,
+			{ new: true }
+		)
+		if (!updatedTask) {
+			throw new Error('Task not found.')
+		}
+
+		res.redirect('/tasks')
+	} catch (err) {
+		console.error(err)
+		res.redirect('/tasks')
 	}
 })
 

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/globals.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>Edit Task</title>
+	</head>
+	<body class="bg-white h-dvh">
+		<%- include('../partials/_navbar.ejs') %>
+		<section class="container mx-auto">
+			<form action="/tasks/<%= task._id %>?_method=PUT" method="POST" class="">
+				<div class="flex justify-between items-center mt-16">
+					<!-- Task Name -->
+					<div>
+						<input
+							type="text"
+							id="taskName"
+							name="name"
+							class="font-semibold text-3xl w-full focus:outline-none"
+							placeholder="Task Name"
+							value="<%= task.name %>"
+							required
+						/>
+					</div>
+					<button
+						type="submit"
+						class="w-fit text-base font-medium bg-[#F1F1F0] px-2.5 py-1 rounded-lg hover:bg-[#2a2a2a] hover:text-white transition ease-in-out"
+					>
+						Save Changes
+					</button>
+				</div>
+
+				<!-- Due Date -->
+				<div class="mt-12 flex gap-3">
+					<label
+						for="dueDate"
+						class="text-base font-medium h-fit py-1 text-nowrap"
+						>Due Date</label
+					>
+					<input
+						type="date"
+						id="dueDate"
+						name="dueDate"
+						class="font-normal text-base w-fit focus:outline-none h-fit py-1"
+						value="<%= task.dueDate ? task.dueDate.toISOString().slice(0, 10) : '' %>"
+					/>
+				</div>
+
+				<!-- First Line -->
+				<div class="mt-12 grid grid-cols-5 gap-5">
+					<!-- Status -->
+					<div class="flex gap-3 items-center">
+						<label for="status" class="text-base font-medium h-fit text-nowrap"
+							>Status</label
+						>
+						<div class="relative w-full">
+							<button
+								id="statusDropdownButton"
+								type="button"
+								class="w-full bg-white text-left focus:outline-none flex justify-left items-center outline-none"
+							>
+								<span
+									id="selectedStatus"
+									class="<%= task.status === 'not started' ? 'bg-[#FFE2DD]' : task.status === 'in progress' ? 'bg-[#FDECC8]' : 'bg-[#DCEEDC]' %> flex items-center gap-1.5 px-3 py-1 rounded-full"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="8"
+										height="8"
+										viewBox="0 0 8 8"
+										fill="none"
+									>
+										<circle
+											cx="4"
+											cy="4"
+											r="4"
+											fill="<%= task.status === 'done' ? '#6C9B7D' : task.status === 'in progress' ? '#CB9434' : '#E26F64' %>"
+										/>
+									</svg>
+									<p class="text-sm">
+										<%= task.status.charAt(0).toUpperCase() +
+										task.status.slice(1) %>
+									</p>
+								</span>
+							</button>
+
+							<div
+								id="statusDropdownMenu"
+								class="hidden absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-2"
+							>
+								<ul class="text-sm">
+									<!-- Status Options -->
+									<% const statusOptions = ['not started', 'in progress',
+									'done'] %> <% statusOptions.forEach((status) => { %>
+									<div class="px-2 py-2 hover:bg-gray-100 cursor-pointer">
+										<li
+											class="flex items-center gap-1.5 px-3 py-1 rounded-full w-fit"
+											data-value="<%= status %>"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="8"
+												height="8"
+												viewBox="0 0 8 8"
+												fill="none"
+											>
+												<circle
+													cx="4"
+													cy="4"
+													r="4"
+													fill="<%= status === 'done' ? '#6C9B7D' : status === 'in progress' ? '#CB9434' : '#E26F64' %>"
+												/>
+											</svg>
+											<p class="text-sm">
+												<%= status.charAt(0).toUpperCase() + status.slice(1) %>
+											</p>
+										</li>
+									</div>
+									<% }) %>
+								</ul>
+							</div>
+							<!-- Hidden input to send the selected value to the server -->
+							<input
+								type="hidden"
+								id="status"
+								name="status"
+								value="<%= task.status %>"
+							/>
+						</div>
+					</div>
+
+					<!-- Dropdown Logic Script -->
+					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+							const dropdownButton = document.getElementById(
+								'statusDropdownButton'
+							)
+							const dropdownMenu = document.getElementById('statusDropdownMenu')
+							const selectedStatus = document.getElementById('selectedStatus')
+							const dropdownItems = dropdownMenu.querySelectorAll('li')
+							const hiddenInput = document.getElementById('status')
+
+							// Toggle dropdown visibility
+							dropdownButton.addEventListener('click', () => {
+								dropdownMenu.classList.toggle('hidden')
+							})
+
+							// Handle option selection
+							dropdownItems.forEach((item) => {
+								item.addEventListener('click', () => {
+									const value = item.getAttribute('data-value')
+									const text = item.querySelector('p').textContent
+									const circleColor = item
+										.querySelector('svg circle')
+										.getAttribute('fill')
+									const backgroundColor = getComputedStyle(item).backgroundColor
+
+									selectedStatus.innerHTML = `
+										<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="none">
+											<circle cx="4" cy="4" r="4" fill="${circleColor}"></circle>
+										</svg>
+										<p class="text-sm">${text}</p>
+									`
+									selectedStatus.style.backgroundColor = backgroundColor
+									hiddenInput.value = value
+									dropdownMenu.classList.add('hidden')
+								})
+							})
+
+							document.addEventListener('click', (event) => {
+								if (
+									!dropdownButton.contains(event.target) &&
+									!dropdownMenu.contains(event.target)
+								) {
+									dropdownMenu.classList.add('hidden')
+								}
+							})
+						})
+					</script>
+
+					<!-- Score -->
+					<div class="flex gap-3">
+						<label
+							for="score"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Score</label
+						>
+						<input
+							type="number"
+							id="score"
+							name="score"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							value="<%= task.score %>"
+							required
+						/>
+					</div>
+
+					<!-- Weight -->
+					<div class="flex gap-3">
+						<label
+							for="weight"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Weight</label
+						>
+						<input
+							type="number"
+							id="weight"
+							name="weight"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							value="<%= task.weight %>"
+							required
+						/>
+					</div>
+
+					<!-- Final Grade -->
+					<div class="flex gap-3">
+						<label
+							for="finalGrade"
+							class="text-base font-medium h-fit py-1 text-nowrap"
+							>Final Grade</label
+						>
+						<input
+							type="number"
+							id="finalGrade"
+							name="finalGrade"
+							class="font-normal text-base w-full focus:outline-none h-fit py-1"
+							value="<%= task.finalGrade %>"
+							readonly
+						/>
+					</div>
+
+					<!-- To calculate Final Grade -->
+					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+							const scoreInput = document.getElementById('score')
+							const weightInput = document.getElementById('weight')
+							const finalGradeInput = document.getElementById('finalGrade')
+
+							const calculateFinalGrade = () => {
+								const score = parseFloat(scoreInput.value) || 0
+								const weight = parseFloat(weightInput.value) || 0
+								finalGradeInput.value = (score * (weight / 100)).toFixed(2)
+							}
+
+							scoreInput.addEventListener('input', calculateFinalGrade)
+							weightInput.addEventListener('input', calculateFinalGrade)
+						})
+					</script>
+
+					<!-- Course -->
+					<div class="flex gap-3 items-center">
+						<label for="course" class="text-base font-medium h-fit text-nowrap"
+							>Course</label
+						>
+
+						<div class="relative w-full">
+							<button
+								id="courseDropdownButton"
+								type="button"
+								class="w-full bg-white text-left focus:outline-none flex justify-left items-center outline-none"
+							>
+								<span
+									id="selectedCourse"
+									class="bg-white flex items-center gap-1.5 px-3 py-1 rounded-full"
+								>
+									<p class="text-sm">
+										<%= task.course ? task.course.courseCode : 'Select a course'
+										%>
+									</p>
+								</span>
+							</button>
+
+							<div
+								id="courseDropdownMenu"
+								class="hidden absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-2"
+							>
+								<ul class="text-sm">
+									<% courses.forEach((course) => { %>
+									<div class="px-2 py-2 hover:bg-gray-100 cursor-pointer">
+										<li
+											class="flex items-center gap-1.5 px-3 py-1 rounded-full w-fit"
+											data-value="<%= course._id %>"
+										>
+											<p class="text-sm"><%= course.courseCode %></p>
+										</li>
+									</div>
+									<% }); %>
+								</ul>
+							</div>
+							<!-- Hidden input to send the selected value to the server -->
+							<input
+								type="hidden"
+								id="course"
+								name="course"
+								value="<%= task.course ? task.course._id : '' %>"
+							/>
+						</div>
+					</div>
+
+					<!-- Dropdown Logic Script -->
+					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+							const courseDropdownButton = document.getElementById(
+								'courseDropdownButton'
+							)
+							const courseDropdownMenu =
+								document.getElementById('courseDropdownMenu')
+							const selectedCourse = document.getElementById('selectedCourse')
+							const courseDropdownItems =
+								courseDropdownMenu.querySelectorAll('li')
+							const hiddenCourseInput = document.getElementById('course')
+
+							// Toggle dropdown visibility
+							courseDropdownButton.addEventListener('click', () => {
+								courseDropdownMenu.classList.toggle('hidden')
+							})
+
+							// Handle option selection
+							courseDropdownItems.forEach((item) => {
+								item.addEventListener('click', () => {
+									const value = item.getAttribute('data-value') // Get the value (e.g., course._id)
+									const text = item.querySelector('p').textContent // Get the course title
+
+									// Update the content of selectedCourse
+									selectedCourse.innerHTML = `
+                  <p class="text-sm">${text}</p>
+              `
+
+									// Update the hidden input value
+									hiddenCourseInput.value = value
+
+									// Close the dropdown menu
+									courseDropdownMenu.classList.add('hidden')
+								})
+							})
+
+							// Close dropdown when clicking outside
+							document.addEventListener('click', (event) => {
+								if (
+									!courseDropdownButton.contains(event.target) &&
+									!courseDropdownMenu.contains(event.target)
+								) {
+									courseDropdownMenu.classList.add('hidden')
+								}
+							})
+						})
+					</script>
+				</div>
+			</form>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/globals.css" />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<title>Tasks</title>
+	</head>
+	<body class="bg-white h-dvh">
+		<%- include('../partials/_navbar.ejs') %>
+		<section class="container mx-auto">
+			<div class="flex justify-between items-center">
+				<h1 class="my-16 font-semibold text-3xl">All Tasks</h1>
+				<a
+					href="/tasks/new"
+					class="w-fit text-base font-medium bg-[#F1F1F0] px-2.5 py-1 rounded-lg hover:bg-[#bababa] transition ease-in-out"
+				>
+					Add Task
+				</a>
+			</div>
+
+			<!-- Loop over semesters -->
+			<% Object.keys(groupedTasks).forEach((semesterName) => { %>
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold mb-4"><%= semesterName %></h2>
+
+				<!-- Loop over courses under each semester -->
+				<% Object.keys(groupedTasks[semesterName]).forEach((courseName) => { %>
+				<div class="mb-6">
+					<h3 class="text-lg font-medium mb-2"><%= courseName %></h3>
+
+					<!-- Tasks Table -->
+					<table
+						class="table-auto w-full mb-4 border-collapse border border-gray-800 rounded-xl overflow-hidden"
+					>
+						<thead class="bg-gray-100">
+							<tr>
+								<th class="px-4 py-2 text-left border border-gray-300">Name</th>
+								<th class="px-4 py-2 text-left border border-gray-300">
+									Due Date
+								</th>
+								<th class="px-4 py-2 text-left border border-gray-300">
+									Status
+								</th>
+								<th class="px-4 py-2 text-left border border-gray-300">
+									Score
+								</th>
+								<th class="px-4 py-2 text-left border border-gray-300">
+									Weight
+								</th>
+								<th class="px-4 py-2 text-left border border-gray-300">
+									Final Grade
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% groupedTasks[semesterName][courseName].forEach((task) => { %>
+							<tr
+								class="border border-gray-300 hover:bg-gray-50 cursor-pointer"
+								onclick="window.location.href='/tasks/<%= task._id %>'"
+							>
+								<td class="px-4 py-2"><%= task.name %></td>
+								<td class="px-4 py-2">
+									<%= task.dueDate ? task.dueDate.toISOString().slice(0, 10) :
+									'N/A' %>
+								</td>
+								<td class="px-4 py-2">
+									<% if (task.status === 'done') { %>
+									<!-- Done -->
+									<div class="">
+										<li
+											class="bg-[#DCEEDC] flex items-center gap-1.5 px-3 py-1 rounded-full w-fit"
+											data-value="done"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="8"
+												height="8"
+												viewBox="0 0 8 8"
+												fill="none"
+											>
+												<circle cx="4" cy="4" r="4" fill="#6C9B7D" />
+											</svg>
+											<p class="text-sm">Done</p>
+										</li>
+									</div>
+									<% } else if (task.status === 'in progress') { %>
+									<!-- In progress -->
+									<div class="">
+										<li
+											class="bg-[#FDECC8] flex items-center gap-1.5 px-3 py-1 rounded-full w-fit"
+											data-value="in progress"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="8"
+												height="8"
+												viewBox="0 0 8 8"
+												fill="none"
+											>
+												<circle cx="4" cy="4" r="4" fill="#CB9434" />
+											</svg>
+											<p class="text-sm">In Progress</p>
+										</li>
+									</div>
+									<% } else { %>
+									<!-- Not started -->
+									<div class="">
+										<li
+											class="bg-[#FFE2DD] flex items-center gap-1.5 px-3 py-1 rounded-full w-fit"
+											data-value="not started"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="8"
+												height="8"
+												viewBox="0 0 8 8"
+												fill="none"
+											>
+												<circle cx="4" cy="4" r="4" fill="#E26F64" />
+											</svg>
+											<p class="text-sm">Not started</p>
+										</li>
+									</div>
+									<% } %>
+								</td>
+								<td class="px-4 py-2"><%= task.score %></td>
+								<td class="px-4 py-2"><%= task.weight %></td>
+								<td class="px-4 py-2"><%= task.finalGrade %></td>
+							</tr>
+							<% }) %>
+						</tbody>
+					</table>
+				</div>
+				<% }) %>
+			</div>
+			<% }) %>
+		</section>
+	</body>
+</html>

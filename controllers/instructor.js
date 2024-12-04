@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const Instructor = require('../models/instructor')
 
-// List All Instructors
 router.get('/', async (req, res) => {
 	try {
 		const instructors = await Instructor.find().populate('user')
@@ -13,31 +12,26 @@ router.get('/', async (req, res) => {
 	}
 })
 
-// New Instructor Page
 router.get('/new', (req, res) => {
 	res.render('instructors/new.ejs')
 })
 
-// Create a New Instructor
 router.post('/', async (req, res) => {
 	try {
-		// Extract necessary data from the form
 		const { name, contactInfo } = req.body
 
-		// Create the new instructor
 		await Instructor.create({
 			name,
 			contactInfo,
-			user: req.session.user._id, // Add owner for reference
+			user: req.session.user._id,
 		})
 
-		// Redirect based on the action field in the form
 		if (req.body.action === 'addAndView') {
-			res.redirect('/instructors') // Redirect to the instructors list
+			res.redirect('/instructors')
 		} else if (req.body.action === 'addAndNew') {
-			res.redirect('/instructors/new') // Redirect to the new instructor form
+			res.redirect('/instructors/new')
 		} else {
-			res.redirect('/instructors') // Default redirection
+			res.redirect('/instructors')
 		}
 	} catch (err) {
 		console.error(err)
@@ -45,7 +39,6 @@ router.post('/', async (req, res) => {
 	}
 })
 
-// Show Instructor Page
 router.get('/:id', async (req, res) => {
 	try {
 		const instructor = await Instructor.findById(req.params.id).populate('user')
